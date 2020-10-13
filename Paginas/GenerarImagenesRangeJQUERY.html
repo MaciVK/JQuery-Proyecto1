@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <h1>Generar Imagenes</h1>
+    <br>
+    <form>
+        <input type="range" max="10" min="1" value="5">
+        <span id="numeroImagenes"></span>
+        <br>
+        <div id="resultado"></div>
+    </form>
+
+
+    <script src="../JQuery/jquery-3.5.1.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#numeroImagenes").text($("input").val());
+            $("input").change(function () {
+                $("#resultado").html("");
+                $("#numeroImagenes").text($(this).val());
+                for (var i = 0; i < $(this).val(); i++) {
+                    var objetoImagen = $("<img>");
+                    objetoImagen.attr("src", "../imgs/perro.jpg");
+                    objetoImagen.appendTo("#resultado");
+                    
+                }
+            });
+
+        });
+
+
+    </script>
+</body>
+
+</html>

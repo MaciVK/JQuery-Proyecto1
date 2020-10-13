@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <h1>Creacion de objetos Checkbox</h1>
+    <br>
+    <h1 id="resultado"></h1>
+    <br>
+    <form>
+        <input type="range" max="10" min="2" value="5" id="rango"><span id="numeroRango"></span>
+        <div id="cajaChecks"></div>
+    </form>
+    <script src="../JQuery/jquery-3.5.1.js"></script>
+    <script>
+        var total = 0;
+        $(document).ready(function () {
+            $("#numeroRango").text($("#rango").val());
+            $("#rango").change(function () {
+                $("#cajaChecks").html("");
+                $("#numeroRango").text($(this).val());
+                for (var i = 0; i < $(this).val(); i++) {
+                    var objCheck = $("<input>");
+                    var spanValorCheck = $("<span>");
+                    var aleat = parseInt((Math.random() * 50) + 1);
+                    spanValorCheck.text(aleat);
+                    objCheck.attr({ "type": "checkbox", "value": aleat });
+                    objCheck.appendTo($("#cajaChecks"));
+                    spanValorCheck.appendTo($("#cajaChecks"));
+                    objCheck.click(function () {
+                        if ($(this).is(":checked")) {
+                            total += parseInt($(this).val());
+                        } else {
+                            total -= parseInt($(this).val());
+                        }
+                        $("#resultado").text(total);   
+                    });
+                }
+
+            });
+
+            /* $("input[type=checkbox]").each(function () {
+                 $(this).change(function () {
+                     if ($(this).is(":checked")) {
+                         alert("entrado");
+ 
+                     }
+ 
+                 });
+ 
+                 if ($(this).is(":checked")) {
+                     total += parseInt($(this).val());
+ 
+                 } else {
+                     total -= parseInt($(this).val());
+                 }
+                 
+             });*/
+
+        });
+
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .coloreada {
+            background-color: fuchsia;
+            color: white;
+            font-weight: bold;
+        }
+
+        .blanca {
+            background-color: white;
+            color: black;
+            font-weight: normal;
+
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Sumar cajas</h1>
+    <input type="number">
+    <input type="number">
+    <input type="number">
+    <input type="number">
+    <input type="number">
+    <button type="button" id="generar">Generar numeros</button>
+    <button type="button" id="sumar">Sumar cajas</button>
+    <h1 id="resultado"></h1>
+
+    <script src="../JQuery/jquery-3.5.1.js"></script>
+    <script>
+        $(document).ready(function () {
+            $("#generar").click(function () {
+                $("input").each(function () {
+                    $(this).val(parseInt((Math.random() * 20) + 1));
+
+                });
+            });
+            $("#sumar").click(function () {
+                var total = 0;
+                $("input").each(function () {
+                    total += parseInt($(this).val());
+                });
+                $("#resultado").text(total);
+            });
+            $("input").blur(function () {
+                $(this).removeClass("blanca");
+                $(this).addClass("coloreada");
+            });
+            $("input").focus(function () {
+                $(this).removeClass("coloreada");
+                $(this).addClass("blanca");
+            });
+        });
+    </script>
+</body>
+
+</html>

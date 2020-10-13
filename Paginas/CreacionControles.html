@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Creacion de controles</title>
+</head>
+
+<body>
+    <h1>Crear controles dinamicamente</h1>
+    <form>
+        <label>Contenido</label>
+        <input type="text" id="cajaContenido">
+        <button type="button" id="botonCreacion">Crear titulo</button>
+        <div id="padre"></div>
+
+    </form>
+
+    <script src="../JQuery/jquery-3.5.1.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#botonCreacion").click(function () {
+                var texto = $("#cajaContenido").val();
+                //Creacion del objeto en varias lineas
+                var h1 = $("<h1>");
+                h1.text(texto);
+                h1.css("background-color", "green");
+                h1.css("color", "white");
+                $("#padre").append(h1);
+                //Podemos cear el objeto en 1 sola linea, formato JSON
+                /*
+                var objeto=$("<tag>",{
+                    "text":"Soy un texto",
+                    "style":"color:blue",....
+                });
+                */
+                var h2 = $("<h2>", {
+                    "text": "texto"
+                    , "style": "background-color:blue;color:white"
+                });
+                //Agregamos del hijo al padre
+                h2.appendTo($("#padre"));
+                //Si queremos que los objetos tengan eventos, lo hacemos con event handler para el objeto creado
+                //Existen 2 sintaxis
+                //1-Mas antigua, que podemos verla aun en algunos codigos y se utiliza on
+                /* 
+                    h1.on("click", function () {
+                        alert("Has pulsado un h1 creado dinamicamente");
+                         $(this).text("Texto cambiado");
+                     });
+                 */
+
+                //2-Sintaxis propia de JQUERY
+                h1.click(function () {
+                    alert("Cambiando...");
+                    $(this).text("Texto cambiado");
+                });
+            });
+
+            //SOLAMENTE ENTRAN EN EL JUEGO DE EVENTOS LOS OBJETOS QUE YA ESTABAN DIBUJADOS EN LA CARGA DE LA PAGINA
+            $("h1").click(function () {
+                alert("Martes 13");
+            })
+
+        });
+
+
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ejemplo each()</title>
+</head>
+
+<body>
+    <h1>Ejemplo each()</h1>
+    <p>aaa</p>
+    <p></p>
+    <p></p>
+    <p></p>
+    <p></p>
+    <p></p>
+    <script src="../JQuery/jquery-3.5.1.js"></script>
+    <script>
+        $(document).ready(function () {
+            $("p").click(function () {
+                var colores = ["red", "yellow", "green", "fuchsia", "orange", "aquamarine"];
+                $("p").each(function () {
+                    var aleatorio=parseInt(Math.random()*colores.length);
+                    //cada parrafo tendra un color diferente
+                    var color=colores[aleatorio];
+                    $(this).css("background-color",color);
+                    $(this).text(color);
+
+                })
+            });
+        });
+
+    </script>
+</body>
+
+</html>
