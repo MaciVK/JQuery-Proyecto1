@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script type="text/javascript">
+
+    function realizarPeticion(){
+        var xhttp=new XMLHttpRequest();
+        xhttp.addEventListener("load", mostrarDatos);
+        xhttp.open("GET","../XMLDocs/Empleados.xml");
+        xhttp.send();
+
+    }
+
+    function mostrarDatos(){
+        //Hay 2 props que indican que una peticion ha sido correcta
+        //aqui entra cuando haya finalizado la peticion, sea correcta o incorrecta
+        //2 propiedades en el objeto this:
+        //  this.readyState->lectura finalizada(4)
+        //  this.status->codigo de la respuesta(404) 200
+        var contenido=document.getElementById("contenido");
+        if(this.readyState==4&&this.status==200){
+            //El obj XMLRequest se puede manejar con metodos del DOM de HTML
+            //Ese objeto viene en la propiedad this.responseXML
+            var docXML=this.responseXML;
+            //buscamos un conjunto de nodos para aislar los apellidos
+            var nodosApellido=docXML.getElementsByTagName("APELLIDO");
+            var html="<ul>\n";
+                for(var i=0;i<nodosApellido.length;i++){
+                    var nodo=nodosApellido[i];
+                    //Todo nodo puede tener hijos
+                    //Hay una propiedad para acceder de forma jerarquica a los hijos
+                    //  childNodes[index]
+                    //Una vez que tenemos algun hijo, podemos mostrar su valor o seguir bajando más hijos
+                    //El texto dentro de un tag, sigue siendo nodo, aunque de texto. Por eso, se usa el NodeValue
+                    //html+="<li>"+nodo.childNodes[0].nodeValue+"</li>\n";
+                    //Hay una propiedad que es mas comoda, si estamos en un nodo con contenido
+                    //-Si tiene subelementos, tambien devuelve el contenido de los subelementos
+                    //  .textContent
+                    var apellido=nodo.textContent;
+                    html+="<li>"+apellido+"</li>\n";
+                }
+            html+="</ul>";
+                contenido.innerHTML=html;
+        }else{
+            contenido.innerHTML="<h1 style='color:red;'>"+"La peticion ha sido incorrecta: "+this.status+"</h1>";
+        }
+    }
+    </script>
+</head>
+<body>
+    <h1>Empleados.xml con formato</h1>
+    <button type="button" onclick="realizarPeticion()">Leer Empleados.xml formato</button>
+    <div id="contenido"></div>
+</body>
+</html>

@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <h1>Practica posicion de elementos dinamicos</h1>
+    <form>
+        <input type="range" id="rango" max="20" min="1">
+    </form>
+    <div id="capaBotones"></div>
+    <div id="capaImagenes"></div>
+    <div id="capaGeneral"></div>
+
+    <script src="../JQuery/jquery-3.5.1.js"></script>
+    <script>
+
+        //***********************!!!!!!!!!!!CAPAS DIFERENTES!!!!!!!!!!!!!!!!!***********************
+
+        // $(document).ready(function () {
+        //     $("#rango").change(function () {
+        //         $("#capaBotones").empty();
+        //         $("#capaImagenes").empty();
+        //         for (var i = 0; i < $("#rango").val(); i++) {
+        //             
+        //             contador++;
+        //             var boton = $("<button>", {
+        //                 "type": "button"
+        //                 , "text": "imagen " + (i + 1)
+        //                 , "data-posicion": i
+        //                 , "data-bandera": false
+        //             });
+
+        //             $("#capaBotones").append(boton);
+        //             var imagen = $("<img>", {
+        //                 "src": "../imgs/perro.jpg"
+        //                 , "data-posicion": i
+
+        //             });
+        //             $("#capaImagenes").append(imagen);
+        //             boton.click(function () {
+        //                 if (!$(this).data("bandera")) {
+        //                     $("#capaImagenes").children().eq(parseInt($(this).data("posicion"))).attr("src", "../imgs/perroCaliente.jpg");
+        //                     $(this).data("bandera", true);
+        //                 } else {
+        //                     $("#capaImagenes").children().eq(parseInt($(this).data("posicion"))).attr("src", "../imgs/perro.jpg");
+        //                     $(this).data("bandera", false);
+        //                 }
+        //             });
+
+        //         }
+        //         contador = 0;
+        //     });
+        // });
+
+        //*******************!!!!!!!!!!!!!!!!!!!!!!!!!!!UNICA CAPA!!!!!!!!!!!!!!!!!!***********************
+        $(document).ready(function () {
+            $("#rango").change(function () {
+                $("#capaGeneral").empty();
+                for (var i = 0; i < parseInt($("#rango").val()); i++) {
+
+                    contador++;
+                    var boton = $("<button>", {
+                        "type": "button"
+                        , "text": "imagen " + (i + 1)
+                        , "data-posicion": i
+                        , "data-bandera": false
+                    });
+                    $("#capaGeneral").append(boton);
+                    boton.click(function () {
+                        //Buscar dentro de las img y encontrar el correspondiente data-key
+                        var valorBoton = $(this).data("posicion");
+                        $("img").each(function () {
+                            var valorImagen = $(this).data("posicion")
+                            if (valorBoton == valorImagen) {
+                                if (!$(this).data("bandera")) {
+                                    $(this).attr("src", "../imgs/perroCaliente.jpg");
+                                    boton.data("bandera", true);
+                                } else {
+                                    $(this).attr("src", "../imgs/perro.jpg");
+                                    boton.data("bandera", true);
+                                }
+                            }
+                        });
+                    });
+                  //oppure le añades un ID a la img, y luego
+                  //$("#imagen"+valorBoton).attr("src","../imgs/perroCaliente.jpg");
+                  //Con esta solucion, te saltas el each();
+
+                }
+
+                $("#capaGeneral").append($("<br>"));
+                for (var i = 0; i < parseInt($("#rango").val()); i++) {
+                    var imagen = $("<img>", {
+                        "src": "../imgs/perro.jpg"
+                        , "data-posicion": i
+
+                    });
+                    $("#capaGeneral").append(imagen);
+                }
+                contador = 0;
+
+
+            });
+        });
+
+    </script>
+</body>
+
+</html>

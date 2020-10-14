@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ejemplo Data-Key</title>
+</head>
+
+<body>
+    <h1>Ejemplo Data-Key</h1>
+    <button type="button" id="botonBotones">Generar Botones</button>
+    <button type="button" id="botonLinks">Generar Links</button>
+    <h1 style="color:blue" id="resultado"></h1>
+    <hr>
+    <div id="capaBotones"></div>
+    <hr>
+    <div id="capaLinks"></div>
+    <script src="../JQuery/jquery-3.5.1.js"></script>
+    <script>
+        function generarNumeros() {
+            var aleat = parseInt((Math.random() * 100) + 1);
+            return aleat;
+        };
+        $(document).ready(function () {
+            $("#botonBotones").click(function () {
+                for (var i = 0; i <= 5; i++) {
+                    var boton = $("<button>", {
+                        "text": "Choplecha"
+                        , "value": generarNumeros()
+                    });
+                    $("#capaBotones").append(boton);
+                    boton.click(function () {
+                        $("#resultado").text($(this).val());
+                    });
+                }
+            });
+            $("#botonLinks").click(function () {
+                for (var i = 0; i <= 5; i++) {
+                    var link = $("<a>", {
+                        "text":"Sorpresa!"
+                        ,"href":"#"
+                        ,"data-valor":generarNumeros()
+                        //oppure link.data("valor",generarNumeros());
+                    });
+                    $("#capaLinks").append(link);
+                    link.click(function () {
+                        var valor=$(this).data("valor");
+                        $("#resultado").text(valor);
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

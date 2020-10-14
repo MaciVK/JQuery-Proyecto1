@@ -14,12 +14,24 @@
     <br>
     <form>
         <input type="range" max="10" min="2" value="5" id="rango"><span id="numeroRango"></span>
-        <div id="cajaChecks"></div>
+        <br>
+        <label>Seleccione Posicion: </label>
+        <input type="text" id="cajaPosicion">
+        <br>
+        <button type="button" id="botonEliminar">Eliminar checkbox POSICION</button>
     </form>
+    <div id="cajaChecks"></div>
+
     <script src="../JQuery/jquery-3.5.1.js"></script>
     <script>
         var total = 0;
         $(document).ready(function () {
+            $("#botonEliminar").click(function () {
+                var posicion = parseInt($("#cajaChecks").val());
+                //Accederemos a un parent (cajaChecks) y a todos sus children para recuperar objetos a partir de una posicion
+                //Hay un metodo llamado eq();
+                $("#cajaChecks").children().eq(posicion).remove();
+            });
             $("#numeroRango").text($("#rango").val());
             $("#rango").change(function () {
                 $("#cajaChecks").empty();
