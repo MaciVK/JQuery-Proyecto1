@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <h1>Leer XML Hospital con atributos</h1>
+    <button type="button" id="botonLeer">Generar</button>
+    <hr>
+    <table border="1" id="tabla">
+        <thead>
+            <tr>
+                <th>NOMBRE</th>
+                <th>DIRECCION</th>
+                <th>TELEFONOS</th>
+                <th>CAMAS</th>
+            </tr>
+        </thead>
+        <tbody>
+
+        </tbody>
+    </table>
+
+    <script src="../JQuery/jquery-3.5.1.js"></script>
+    <script>
+        $(document).ready(function () {
+            $("#botonLeer").click(function () {
+                $.get("../XMLDocs/HOSPITAL_ATRIBUTOS.xml", function (data) {
+                    var hospitales = $(data).find("HOSPITAL");
+                    hospitales.each(function () {
+                        //Para recuperar un atributo es .attr("NAME");
+                        var nombre = $(this).attr("NOMBRE");
+                        var direccion = $(this).attr("DIRECCION");
+                        var telefono = $(this).attr("TELEFONO");
+                        var numCamas = $(this).attr("NUM_CAMA");
+                        var tr = $("<tr>");
+                        var tdNombre = $("<td>", {
+                            "text": nombre
+                        });
+                        var tdDireccion = $("<td>", { "text": direccion });
+                        var tdTelefono = $("<td>", { "text": telefono });
+                        var tdCamas = $("<td>", { "text": numCamas });
+                        //Añadimos cada columna a la fila
+                        tr.append(tdNombre);
+                        tr.append(tdDireccion);
+                        tr.append(tdTelefono);
+                        tr.append(tdCamas);
+                        $("#tabla tbody").append(tr);
+                    });
+                });
+            });
+        });
+    </script>
+</body>
+
+</html>

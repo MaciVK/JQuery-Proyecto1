@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        a {
+            text-decoration: none;
+            color: black;
+            font-size: 1.2rem;
+        }
+    </style>
+    <script>
+        window.onload = function () {
+            var xhttp = new XMLHttpRequest();
+            xhttp.addEventListener("load", function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    var divEnlaces = document.getElementById("enlacesAlumnos");
+                    var lista = document.createElement("ul");
+                    lista.id = "lista";
+
+                    var alumnos = this.responseXML.getElementsByTagName("alumno");
+                    for (var alumno of alumnos) {
+                        var elementoLista = document.createElement("li");
+                        var enlace = document.createElement("a");
+                        enlace.href = "#";
+                        enlace.setAttribute("data-id", alumno.getElementsByTagName("idalumno")[0].textContent);
+                        //se puede hacer tambien con enlace.dataset.id=alumno.getElementsByTagName("idalumno")[0].textContent
+                        //luego para recuperarlo, es igual, o con getAttribute o con la misma sentencia (enlace.dataset.id)
+                        //Si no existe el data-key, lo crea. si existe, lo recuepra
+                        var nombre = alumno.getElementsByTagName("nombre")[0].textContent;
+                        enlace.innerText = nombre;
+                        enlace.addEventListener("click", function () {
+                            var idAlumno = this.getAttribute("data-id");
+                            var divNota = document.getElementById("nombreYnota");
+                            divNota.innerText = "";
+                            var xhttp = new XMLHttpRequest();
+                            xhttp.addEventListener("load", function () {
+                                if (this.readyState == 4 && this.status == 200) {
+                                    var documentoXML = this.responseXML;
+                                    var alumnos = documentoXML.getElementsByTagName("alumno");
+                                    for (var alumno of alumnos) {
+                                        if (alumno.getElementsByTagName("idalumno")[0].textContent == idAlumno) {
+                                            var h1 = document.createElement("h1");
+                                            h1.innerText = alumno.getElementsByTagName("nombre")[0].textContent + " " + alumno.getElementsByTagName("apellidos")[0].textContent;
+                                            var h2 = document.createElement("h2");
+                                            h2.innerText = "Nota: " + alumno.getElementsByTagName("nota")[0].textContent;
+                                            divNota.appendChild(h1);
+                                            divNota.appendChild(h2);
+                                        }
+                                    }
+
+
+                                }
+                            });
+                            xhttp.open("GET", "../XMLDocs/alumnos.xml");
+                            xhttp.send();
+
+
+                        });
+                        lista.appendChild(elementoLista).append(enlace);
+
+                    }
+                    divEnlaces.appendChild(lista);
+                }
+
+
+            });
+            xhttp.open("GET", "../XMLDocs/alumnos.xml");
+            xhttp.send();
+
+        };
+
+
+    </script>
+</head>
+
+<body>
+    <div id="enlacesAlumnos">
+
+    </div>
+    <div id="nombreYnota">
+
+    </div>
+</body>
+
+</html>

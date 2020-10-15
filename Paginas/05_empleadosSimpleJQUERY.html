@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+</head>
+
+<body>
+
+    <h1>Documento XML simple JQUERY</h1>
+    <button type="button" id="botonLeer">Cargar empleados</button>
+    <hr>
+    <div id="resultado"></div>
+
+    <script src="../JQuery/jquery-3.5.1.js"></script>
+    <script>
+        $(document).ready(function () {
+            $("#botonLeer").click(function () {
+                $.get("../XMLDocs/empleados.xml", function (data) {
+                    console.log("leyendo...");
+                    //Buscamos todos los tag apellido
+                    var html = "<ul>";
+
+                    var apellidos = $(data).find("APELLIDO");
+                    apellidos.each(function () {
+                        //Con $(this) tenemos el objeto nodo
+                    var ape=$(this).text();//igual que .textContent
+                    console.log($(this));
+                        html+="<li>"+ape+"</li>";
+                    });
+
+                    html += "</ul>";
+                    $("#resultado").html(html);
+                });
+            });
+        });
+    </script>
+</body>
+
+</html>

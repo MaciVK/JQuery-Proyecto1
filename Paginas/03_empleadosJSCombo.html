@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script type="text/javascript">
+        //Como necesitamos que los apellidos esten cargados al abrir la pagina, usamos el window.onload
+        window.onload = function () {
+            var xhttp = new XMLHttpRequest();
+            xhttp.addEventListener("load", function () {
+                //Aqui el codigo cuando tengamos respuesta del server
+                //Cargamos el control SELECT
+
+                if (this.readyState == 4 && this.status == 200) {
+                    //Buscamso el SELECT
+
+                    var select = document.getElementById("selectEmpleados");
+                    var nodosApellido = this.responseXML.getElementsByTagName("APELLIDO");
+                    for (var nodoApe of nodosApellido) {
+                        var apellido = nodoApe.textContent;
+                        var option = document.createElement("option");
+                        option.innerText = apellido;
+                        option.value = apellido;
+                        select.appendChild(option);
+                    }
+                }
+            });
+            xhttp.open("GET", "../XMLDocs/datosempleados.xml");
+            xhttp.send();
+        };
+        function realizarPeticion() {
+
+            var xhttp = new XMLHttpRequest();
+            xhttp.addEventListener("load", pintarOficio);
+            xhttp.open("GET", "../XMLDocs/datosempleados.xml");
+            xhttp.send();
+
+        }
+
+        function pintarOficio() {
+            if (this.readyState == 4 && this.status == 200) {
+                //Necesitamos averiguar el option seleccionado del select
+                var select = document.getElementById("selectEmpleados");
+                //Necesitamos la posicion del elemento seleccionado
+                var posicion = -1;
+                for (var i = 0; i < select.options.length; i++) {
+                    var opt = select.options[i];
+                    if (opt.selected) {
+                        //Necesitamos la posicion del elemento 
+                        posicion = i;
+                        break;
+                    }
+                }
+                //Nos centramos en el xml
+                var docxml = this.responseXML;
+                var nodosEmpleado = docxml.getElementsByTagName("EMPLEADO")
+                var empleado=nodosEmpleado[posicion];
+                var apellido=empleado.getElementsByTagName("APELLIDO")[0].textContent;
+                var oficio=empleado.getElementsByTagName("OFICIO")[0].textContent;
+                document.getElementById("datoApellido").innerText="Apellido: "+apellido;
+                document.getElementById("datoOficio").innerText="Oficio: "+oficio;
+
+            }
+            var contenido = "";
+        }
+
+    </script>
+</head>
+
+<body>
+    <h1>Busqueda de empleados JS con Select</h1>
+    <form>
+        Seleccione un empleado: <select id="selectEmpleados" onchange="realizarPeticion()">
+
+        </select>
+        <h1 style="color:green" id="datoApellido"></h1>
+        <h1 style="color:fuchsia" id="datoOficio"></h1>
+    </form>
+</body>
+
+</html>
