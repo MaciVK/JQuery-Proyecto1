@@ -9,16 +9,55 @@
 
 <body>
     <h1>Documento simple Tareas JSON</h1>
-    <button type="button" id="botonGET">Leer con $.getJson</button>
+    <button type="button" id="botonGET">Leer con $.getJSON</button>
     <button type="button" id="botonAJAX">Leer con $.ajax</button>
     <hr>
     <div id="resultado"></div>
 
     <script src="../JQuery\jquery-3.5.1.min.js"></script>
     <script>
-        $(document).ready(function(){
+        $(document).ready(function () {
+            $("#botonGET").click(function () {
+                $.getJSON("../JSONDocs/tareas.json", function (data) {
+                    //Recorremos el objeto Simple (de llave a llave)
+                    $("#resultado").empty();
+                    $.each(data, function (key, value) {
+                        //Recorridos de objetos simples:
+                        //Key->clave del elemento
+                        //Value->valor del elemento
+                        var h1 = $("<h1>", {
+                            "text": "Clave: " + key + ", Valor: " + value
+                        });
+                        h1.appendTo($("#resultado"));
+                    });
+                });
+            });
 
+
+            $("#botonAJAX").click(function () {
+                $.ajax({
+                    //Si son reconocibles por el metodo, podemos NO poner las comillas a las keys
+                    "url": "../JSONDocs/tareas.json"
+                    , "method": "GET"
+                    , success: function (data) {
+                        $("#resultado").empty();
+                        $.each(data, function (key, value) {
+                            var h1 = $("<h1>", {
+                                "text": "Clave: " + key + ", Valor: " + value
+                            });
+                            h1.css("color", "blue");
+                            h1.appendTo($("#resultado"));
+                        });
+                    }
+                    , "error": function () {
+                        $("#resultado").empty();
+                        $("#resultado").text("Error al leer el archivo");
+                    }
+                });
+            });
         });
+
+
     </script>
 </body>
 

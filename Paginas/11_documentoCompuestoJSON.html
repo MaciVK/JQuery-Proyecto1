@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+</head>
+
+<body>
+    <h1>Conjunto de objetos JSON Jquery</h1>
+    <button type="button" id="botonClientes">Leer JSON</button>
+    <div id="resultado"></div>
+
+    <script src="../JQuery\jquery-3.5.1.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            $("#botonClientes").click(function () {
+                $("#resultado").empty();
+                $.getJSON("../JSONDocs/clientessimples.json", function (data) {
+                    //El recorrido es con each, pero si recorremos arrays, vienen el indice(key) y el objeto(value)
+                    $.each(data.clientes, function (index, cliente) {
+                        //Las props de los objetos JSON son dinámicas
+                        var h1 = $("<h1>", {
+                            text: "Indice: " + index+", Nombre: "+cliente.nombre
+
+                        });
+                        h1.appendTo($("#resultado"));
+                    });
+
+                });
+            });
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <h1>Documento JSON XMLHttpRequest</h1>
+    <button type="button" onclick="realizarPeticion()">Realizar Peticion</button>
+    <div id="resultado"></div>
+
+    <script type="text/javascript">
+
+        function realizarPeticion() {
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    console.log(this.readyState);
+                    //Aqui se captura la respuesta y convertiremos el objeto plano a JSON
+                    var textoPlano = this.responseText;
+                    // convertimos el teto plano a formato JSON para tratarlo
+                    var data = JSON.parse(textoPlano);
+                    leerDatosJSON(data);
+                }
+            }
+            xhttp.open("GET", "../JSONDocs/clientessimples.json", true);
+            //El tercer parametro indica si deseamos la peticion asincrona
+            xhttp.send();
+
+        }
+        function leerDatosJSON(data) {
+            //Los objetos JSON son iguales, vienen de JS y se manejan igual que en JQUERY
+            for (var i = 0; i < data.clientes.length; i++) {
+                var h1 = document.createElement("h1");
+                var cliente = data.clientes[i];
+                h1.innerText = cliente.nombre;
+                document.getElementById("resultado").appendChild(h1);
+            }
+        }
+    </script>
+
+</body>
+
+</html>

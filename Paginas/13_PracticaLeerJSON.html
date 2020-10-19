@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <h1>Leer JSON Jugadores con $.ajax</h1>
+    <form>
+        <label> Seleccione Jugador</label>
+        <select id="jugadores"></select>
+    </form>
+    <hr>
+    <div id="resultado"></div>
+    <script src="../JQuery/jquery-3.5.1.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $.ajax({
+                url: "../JSONDocs/jugadores.json"
+                , method: "GET"
+                , success: function (data) {
+                    $("#resultado").empty();
+                    $.each(data.jugadores, function (index, jugador) {
+                        var optionJugador = $("<option>", {
+                            "text": jugador.nombre
+                            , "value": jugador.nombre
+                            , "data-numero": jugador.numero
+                            , "data-posicion": jugador.posicion
+                            , "data-edad": jugador.edad
+                            , "data-urlimagen": jugador.imagen
+                        });
+                        optionJugador.appendTo($("#jugadores"));
+                    });
+
+                }
+                , "error": function () {
+                    $("#resultado").empty();
+                    $("#resultado").text("No se encuentra el archivo");
+                }
+            });
+
+            $("#jugadores").change(function () {
+                $("#resultado").empty();
+                var seleccionada = $(this).find(":selected");
+                var h1Nombre = $("<h1>", {
+                    "text": "Nombre: " + seleccionada.val()
+                });
+                var h1Numero = $("<h1>", {
+                    "text": "Numero dorsal: " + seleccionada.data("numero")
+                });
+                var h1Posicion = $("<h1>", {
+                    "text": "Posicion: " + seleccionada.data("posicion")
+                });
+                var h1Edad = $("<h1>", {
+                    "text": "Edad: " + seleccionada.data("edad")
+                });
+                var imagen = $("<img>", { "src": seleccionada.data("urlimagen") });
+
+                $("#resultado").append(h1Nombre).append(h1Numero).append(h1Posicion).append(h1Edad).append(imagen);
+            });
+        });
+
+    </script>
+
+</body>
+
+</html>
