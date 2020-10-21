@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <h1>Maestro Detalle</h1>
+    <table border="1" id="tablaDepartamentos">
+        <thead>
+            <tr>
+                <th>NOMBRE DEPARTAMENTO</th>
+                <th>NUMERO DEPARTAMENTO</th>
+                <th>LOCALIDAD DEPARTAMENTO</th>
+                <th>Acción</th>
+
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+    <hr>
+    <table border="1" id="tablaEmpleados">
+        <thead>
+            <tr>
+                <th>APELLIDO</th>
+                <th>OFICIO</th>
+                <th>SALARIO</th>
+                <th>DEPARTAMENTO</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+    <table id="tablaDetalle" border="1"></table>
+    <script src="../JQuery/jquery-3.5.1.js"></script>
+    <script>
+        var URLAPIDepartamentos = "https://apicruddepartamentoscore.azurewebsites.net";
+        var URLAPIEmpleados = "https://apiempleadosspgs.azurewebsites.net/api";
+        $(document).ready(function () {
+            cargarDepartamentos();
+        });
+
+        function cargarDepartamentos() {
+            var request = "/api/departamentos";
+            $.ajax({
+                url: URLAPIDepartamentos + request
+                , type: "GET"
+                , success: function (data) {
+                    $.each(data, function (index, departamento) {
+                        var tr = $("<tr>");
+                        var tdNombre = $("<td>", {
+                            "text": departamento.nombre
+                        });
+                        var tdNumero = $("<td>", {
+                            "text": departamento.numero
+                        });
+                        var tdLocalidad = $("<td>", {
+                            "text": departamento.localidad
+                        });
+                        tdNombre.appendTo(tr);
+                        tdNumero.appendTo(tr);
+                        tdLocalidad.appendTo(tr);
+
+                        var link = $("<a>", {
+                            "href": "#"
+                            , "data-iddepart": departamento.numero
+                            , "text": "Empleados"
+                        });
+                        tr.append($("<td>").append(link));
+                        link.click(function () {
+                            //1º Asociamos el data-idDepart
+                            var idDepart = $(this).data("iddepart");
+                            //2º Ataque al servicio
+                            var request = "/Empleados/EmpleadosDepartamento/" + idDepart;
+                            $.ajax({
+                                url: URLAPIEmpleados + request
+                                , type: "GET"
+                                , success: function (data) {
+                                    var html = "";
+                                    $.each(data, function (index, empleado) {
+                                        html += "<tr>";
+                                        html += "<td>" + empleado.apellido + "</td>";
+                                        html += "<td>" + empleado.oficio + "</td>";
+                                        html += "<td>" + empleado.salario + "</td>";
+                                        html += "<td>" + empleado.departamento + "</td>";
+                                        html += "</tr>";
+                                    });
+                                    $("#tablaEmpleados tbody").html(html);
+                                }
+                            })
+                        });
+                        $("#tablaDepartamentos tbody").append(tr);
+
+                    });
+
+                }
+
+            });
+
+        };
+        function cargarEmpleadosApellido() {
+
+        }
+        function cargarEmpleadosOficio() {
+
+        }
+    </script>
+</body>
+
+</html>

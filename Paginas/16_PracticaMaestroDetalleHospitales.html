@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <!--CAMBIAR LIBRERIAS A VUESTRA RUTA LOCAL-->
+    <link rel="stylesheet" href="../bootstrap-4.5.3-dist/css/bootstrap.css">
+    <style type="text/css">
+        #botonera button {
+            border-radius: 5px;
+        }
+
+        #botonera button:hover {
+            color: white;
+            background-color: gray;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container-fluid">
+        <h1>Maestro Detalle Hospitales</h1>
+        <div class="form-group">
+            <div class="row">
+                <div class="col">
+                    <label for="idHospital">ID Hospital: </label>
+                    <input type="number" id="idHospital" class="form-control">
+                </div>
+                <div class="col">
+                    <label for="nombreHospital">Nombre: </label>
+                    <input type="text" id="nombreHospital" class="form-control">
+                </div>
+                <div class="col">
+                    <label for="direccionHospital">Direcion: </label>
+                    <input type="text" id="direccionHospital" class="form-control">
+                </div>
+                <div class="col">
+                    <label for="telefonoHospital">Telefono: </label>
+                    <input type="text" id="telefonoHospital" class="form-control">
+                </div>
+                <div class="col">
+                    <label for="camasHospital">Numero Camas: </label>
+                    <input type="number" min="1" id="camasHospital" class="form-control">
+                </div>
+            </div>
+        </div>
+        <hr>
+        <div id="botonera">
+            <button type="button" id="botonRecargarHospitales" class="btn btn-outline-secondary">Cargar Listado
+                Hospitales</button>
+            <button type="button" id="botonBuscarId" class="btn btn-outline-secondary">Buscar Hospital por ID</button>
+            <button type="button" id="botonInsertar" class="btn btn-outline-secondary">Insertar Hospital</button>
+            <button type="button" id="botonModificar" class="btn btn-outline-secondary">Modificar Hospital</button>
+            <button type="button" id="botonEliminar" class="btn btn-outline-secondary">Eliminar Hospital</button>
+        </div>
+        <hr>
+        <h1 id="cambiosRecientes"></h1>
+
+        <table id="tablaHospitales" class="table table-sm table-bordered table-hover">
+            <caption>Listado Hospitales</caption>
+            <thead class="thead-dark">
+                <tr>
+                    <th scope="col">ID Hospital</th>
+                    <th scope="col">Nombre</th>
+                    <th scope="col">Direccion</th>
+                    <th scope="col">NºTelefono</th>
+                    <th scope="col">Nº Camas</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+    <!--CAMBIAR LIBRERIAS A VUESTRA RUTA LOCAL-->
+    <script src="../JQuery/jquery-3.5.1.js"></script>
+    <script src="../bootstrap-4.5.3-dist/js/bootstrap.js"></script>
+    <script>
+        var URLAPIHospitales = "https://apicrudhospital.azurewebsites.net";
+        $(document).ready(function () {
+            cargarHospitales();
+            $("#botonRecargarHospitales").click(cargarHospitales);
+            $("#botonBuscarId").click(function () {
+                var GETbyIDRequest = "/webresources/hospitales/";
+                var idHospital = parseInt($("#idHospital").val());
+                $.ajax({
+                    url: URLAPIHospitales + GETbyIDRequest + idhospital
+                    , type: "GET"
+                    , success: function (hospital) {
+                        $("#tablaHospitales tbody").empty();
+                        var tr = $("<tr>");
+                        var tdId = $("<td>", {
+                            "text": hospital.idhospital
+                            , "data-idHospital": hospital.idhospital
+                        });
+                        var tdNombre = $("<td>", {
+                            "text": hospital.nombre
+                        });
+                        var tdDireccion = $("<td>", {
+                            "text": hospital.direccion
+                        });
+                        var tdTelefono = $("<td>", {
+                            "text": hospital.telefono
+                        });
+                        var tdCamas = $("<td>", {
+                            "text": hospital.camas
+                        });
+                        tr.append(tdId).append(tdNombre).append(tdDireccion).append(tdTelefono).append(tdCamas);
+                        $("#tablaHospitales tbody").append(tr);
+                    }
+                });
+            });
+            $("#botonInsertar").click(function () {
+                var request = "/webresources/hospitales/post";
+                var hospital = new Object();
+                hospital.idhospital = parseInt($("#idHospital").val());
+                hospital.nombre = $("#nombreHospital").val();
+                hospital.direccion = $("#direccionHospital").val();
+                hospital.telefono = $("#telefonoHospital").val();
+                hospital.camas = parseInt($("#camasHospital").val());
+                var nuevoHospitalJSON = JSON.stringify(hospital);
+                if (confirm("Seguro que quiere añadir este Hospital?")) {
+                    $.ajax({
+                        url: URLAPIHospitales + request
+                        , type: "POST"
+                        , data: nuevoHospitalJSON
+                        , contentType: "application/json"
+                        , success: function () {
+                            alert("Nuevo Hospital Insertado correctamente");
+                            $("#cambiosRecientes").text("Hospital añadido: " + $("#idHospital").val());
+                            cargarHospitales();
+                        }
+                        , error: function () {
+                            alert("Ha surgido un problema...");
+                        }
+                    });
+
+                } else {
+                    alert("Insertado detenido");
+                }
+
+            });
+            $("#botonModificar").click(function () {
+                var request = "/webresources/hospitales/put";
+                var hospital = new Object();
+                hospital.idhospital = parseInt($("#idHospital").val());
+                hospital.nombre = $("#nombreHospital").val();
+                hospital.direccion = $("#direccionHospital").val();
+                hospital.telefono = $("#telefonoHospital").val();
+                hospital.camas = parseInt($("#camasHospital").val());
+                var hospitalModificadoJSON = JSON.stringify(hospital);
+                if (confirm("Seguro que quiere modificar el Hospital " + $("#idHospital").val() + "?")) {
+                    $.ajax({
+                        url: URLAPIHospitales + request
+                        , type: "PUT"
+                        , data: hospitalModificadoJSON
+                        , contentType: "application/json"
+                        , success: function () {
+                            alert("Hospital Modificado Correctamente");
+                            $("#cambiosRecientes").text("Hospital modificado: " + $("#idHospital").val());
+                            cargarHospitales();
+                        }
+                        , error: function () {
+                            alert("Ha habido un error...");
+                        }
+                    });
+
+                } else {
+                    alert("Modificado detenido");
+                }
+            });
+            $("#botonEliminar").click(function () {
+                var request = "/webresources/hospitales/delete/";
+                var idHospital = parseInt($("#idHospital").val());
+                if (confirm("Está seguro que quiere borrar el Hospital con id " + idHospital + "?")) {
+                    $.ajax({
+                        url: URLAPIHospitales + request + idHospital
+                        , type: "DELETE"
+                        , success: function () {
+                            alert("Hospital Borrado Correctamente");
+                            $("#cambiosRecientes").text("Hospital eliminado: " + $("#idHospital").val());
+                            cargarHospitales();
+                        }
+                        , error: function () {
+                            alert("Ha habido un problema...");
+
+                        }
+                    });
+                } else {
+                    alert("Borrado detenido");
+                }
+
+            });
+        });
+        function cargarHospitales() {
+            var GETrequest = "/webresources/hospitales";
+            $("#tablaHospitales tbody").empty();
+            $.ajax({
+                url: URLAPIHospitales + GETrequest
+                , type: "GET"
+                , success: function (data) {
+                    $.each(data, function (index, hospital) {
+                        var tr = $("<tr>");
+                        var thId = $("<th>", {
+                            "text": hospital.idhospital
+                            , "data-idHospital": hospital.idhospital
+                            , "scope": "row"
+                        });
+                        var tdNombre = $("<td>", {
+                            "text": hospital.nombre
+                        });
+                        var tdDireccion = $("<td>", {
+                            "text": hospital.direccion
+                        });
+                        var tdTelefono = $("<td>", {
+                            "text": hospital.telefono
+                        });
+                        var tdCamas = $("<td>", {
+                            "text": hospital.camas
+                        });
+                        tr.append(thId).append(tdNombre).append(tdDireccion).append(tdTelefono).append(tdCamas);
+                        $("#tablaHospitales tbody").append(tr);
+                    });
+                }
+            });
+        }
+
+    </script>
+</body>
+
+</html>
