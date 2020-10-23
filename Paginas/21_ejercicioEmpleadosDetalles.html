@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+
+    <h1>Ejercicio Empleados</h1>
+    <h2>Seleccione un Oficio: </h2>
+    <form>
+        <select name="selectOficios" id="selectOficios">
+        </select>
+    </form>
+    <hr>
+    <br>
+    <table border="1" id="empleadosOficio">
+        <thead>
+            <tr>
+                <th>ID EMPLEADO</th>
+                <th>APELLIDO</th>
+                <th>OFICIO</th>
+                <th>FECHA ALTA EMPRESA</th>
+                <th>SALARIO</th>
+                <th>DEPARTAMENTO</th>
+
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+    <hr>
+    <table border="1"> </table>
+
+
+    <script src="../JQuery/jquery-3.5.1.min.js"></script>
+    <script>
+        var URLAPIEmpleados = "https://apipracticaempleados.azurewebsites.net";
+        $(document).ready(function () {
+            var requestEmpleados = "/api/Empleados";
+            $.ajax({
+                url: URLAPIEmpleados + requestEmpleados
+                , type: "GET"
+                , success: function (data) {
+                    $.each(data, function (index, empleado) {
+                        var opcion = $("<option>", {
+                            "text": empleado.oficio
+                        });
+                        $("#selectOficios").append(opcion);
+                    });
+                }
+            });
+            $("#selectOficios").change(function () {
+
+                var oficio = $("#selectOficios").val();
+                var requestEmpleadosOficio = "/EmpleadosOficio/" + oficio;
+                $.ajax({
+                    url: URLAPIEmpleados + requestEmpleados + requestEmpleadosOficio
+                    , type: "GET"
+                    , success: function (data) {
+                        $("#empleadosOficio  tbody").empty();
+                        $.each(data, function (index, empleado) {
+                            var tr = $("<tr>");
+                            var tdIdEmpleado = $("<td>", { "text": empleado.idempleado });
+                            var tdApellido = $("<td>", { "text": empleado.apellido });
+                            var tdOficio = $("<td>", { "text": empleado.oficio });
+                            var tdFechaAlta = $("<td>", { "text": empleado.fechaalta });
+                            var tdSalario = $("<td>", { "text": empleado.salario + "€" });
+                            var tdDepartamento = $("<td>", { "text": empleado.departamento });
+                            var tdDetalles = $("<a>", {
+                                "href": "#"
+                                , "text": "Ir a Detalles"
+                            });
+                            tr.append(tdIdEmpleado).append(tdApellido).append(tdOficio).append(tdFechaAlta).append(tdSalario).append(tdDepartamento).append(tdDetalles);
+                            $("#empleadosOficio tbody").append(tr);
+
+                        });
+                    }
+                });
+
+            });
+        });
+
+
+    </script>
+</body>
+
+</html>
